@@ -24,7 +24,6 @@ public class CompanyController {
         int limit = 10;
         List<Company> articles = companyRepository.findAllLimitDesc(offset, limit);
 
-
         return articles;
     }
 
