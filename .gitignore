@@ -34,3 +34,5 @@ out/
 # application.yml
 *.yml
 
+# QClass
+generated
