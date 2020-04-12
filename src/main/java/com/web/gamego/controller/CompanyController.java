@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.web.gamego.entity.QCompany.company;
+
 
 @RestController
 @RequestMapping("/api/company")
@@ -59,7 +61,7 @@ public class CompanyController {
 
 
     @GetMapping("test")
-    public Map<String, Object> test(Company vo, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> test(Company vo, HttpServletRequest request) {
 //        @RequestParam(value = "offset") Long offset
         Map<String, Object> jsonObject = new HashMap<String, Object>();
 
@@ -68,7 +70,7 @@ public class CompanyController {
         Long count_total = companyRepository.countAll();
         jsonObject.put("count_total", count_total);
 
-        return jsonObject;
+        return new ResponseEntity<>(jsonObject, HttpStatus.OK);
     }
 
 }

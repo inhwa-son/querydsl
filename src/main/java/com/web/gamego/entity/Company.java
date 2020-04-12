@@ -4,13 +4,15 @@ package com.web.gamego.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.gamego.model.SimplePagingVO;
 import lombok.*;
+import org.springframework.context.annotation.Bean;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
 
+
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Data
 @Table(name = "company")
@@ -19,13 +21,13 @@ public class Company extends SimplePagingVO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "bigint comment '고유 ID'")
-    Long id;
+    private Long id;
 
     @Column(name = "company_name", columnDefinition = "varchar(32) comment '회사 이름'")
-    String companyName;
+    private String companyName;
 
     @Column(name = "tel", columnDefinition = "varchar(12) comment '연락처'")
-    String tel;
+    private String tel;
 
     @Column(name = "email", columnDefinition = "varchar(54) comment '이메일 주소'")
     String email;
@@ -36,17 +38,17 @@ public class Company extends SimplePagingVO {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_at", columnDefinition = "datetime comment '작성일'")
-    Date createdAt;  // 작성일
+    private Date createdAt;  // 작성일
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at", columnDefinition = "datetime comment '수정일'")
-    Date updatedAt;  // 수정일
+    private Date updatedAt;  // 수정일
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "deleted_at", columnDefinition = "datetime comment '삭제일'")
-    Date deletedAt;
+    private Date deletedAt;
 
 
     @Builder
