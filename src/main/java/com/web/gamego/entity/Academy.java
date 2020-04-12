@@ -1,7 +1,6 @@
 package com.web.gamego.entity;
 
 
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

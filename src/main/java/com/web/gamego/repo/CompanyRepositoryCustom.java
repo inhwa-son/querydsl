@@ -7,5 +7,9 @@ import java.util.List;
 public interface CompanyRepositoryCustom {
     List<Company> findAllLimitDesc(long offset, long limit);
 
+    Long countAll();
+
+    List<?> findAllTest(long offset, long limit);
+
 //    List<ArticleFacebook> findAllMostLikes(long offset, long limit, LocalDate today);
 }

@@ -2,25 +2,24 @@ package com.web.gamego.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.web.gamego.model.SimplePagingVO;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Getter
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="company")
-public class Company {
+@Data
+@Table(name = "company")
+public class Company extends SimplePagingVO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "bigint comment '고유 ID'")
     Long id;
-//    private String name;
 
     @Column(name = "company_name", columnDefinition = "varchar(32) comment '회사 이름'")
     String companyName;
@@ -50,11 +49,15 @@ public class Company {
     Date deletedAt;
 
 
+    @Builder
+    public Company(String companyName, String tel, String email, String testBigint, Date createdAt) {
+        this.companyName = companyName;
+        this.tel = tel;
+        this.email = email;
+        this.testBigint = testBigint;
+        this.createdAt = createdAt;
+    }
 
 
-//    @Builder
-//    public Company(String name, String address) {
-//        this.name = name;
-//        this.address = address;
-//    }
+
 }
