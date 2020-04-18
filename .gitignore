@@ -32,10 +32,12 @@ out/
 .vscode/
 
 # application.yml
-*.yml
+application.yml
 
 # QClass
-generated
+generated/
+target/
 
 #mac
 .DS_Store
+
