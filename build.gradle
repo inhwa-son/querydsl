@@ -51,6 +51,7 @@ dependencies {
 	compile("com.querydsl:querydsl-apt")
 //	compile("com.querydsl:querydsl-core")
 
+
 }
 
 test {
@@ -66,7 +67,7 @@ configurations {
 //		extendsFrom developmentOnly
 //	}
 }
-def querydslSrcDir = 'src/main/generated'
+def querydslSrcDir = 'target/generated-sources/java'
 sourceSets {
 	main {
 		java {

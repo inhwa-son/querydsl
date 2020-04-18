@@ -1,18 +1,26 @@
 package com.web.gamego.entity_view;
 
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.web.gamego.model.SimplePagingVO;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.util.Date;
 
-public interface CompanyView {
 
-    Long getId();
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CompanyView {
 
-    String getCompanyName();
+    private Long id;
+    private String companyName;
 
-    String getTel();
+    private String tel;
+    String email;
+    String testBigint;
 
-    String getEmail();
 
-    String getTestBigint();
-
-    Date getCreatedAt();
 }

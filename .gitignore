@@ -36,3 +36,6 @@ out/
 
 # QClass
 generated
+
+#mac
+.DS_Store
