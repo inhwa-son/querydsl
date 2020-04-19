@@ -2,55 +2,207 @@
 <html lang="ko">
 
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Vue.js Sample</title>
+    <title>querydsl todo list</title>
 </head>
 
 <body>
 
-<div id="root">
-    <p>{{ msg }}</p>
-    <div>
-        <button style="color: aqua;" @click="lodashStudy">버튼</button>
+    <div id="app">
+        <v-app :dark="isDark">
+            <v-container style="max-width: 600px">
+                <p>{{ msg }}</p>
+                <div>
+                    <button style="color: aqua;" @click="testClick">버튼</button>
+                    <!-- <button style="color: aqua;" @click="testClick22">버튼222</button> -->
+
+                </div>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn icon @click="show = !show" v-on="on">
+                            <v-icon v-model="isDark" @click="isDark = !isDark">
+                                {{ show ? 'check_circle' : 'check_circle_outline' }}</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Dark mode</span>
+                </v-tooltip>
+
+                <!-- <div>
+                    <v-data-table :headers="headers" :items="desserts" :page.sync="page" :items-per-page="itemsPerPage" hide-default-footer
+                        class="elevation-1" @page-count="pageCount = $event">
+                        <template v-slot:item.calories="{ item }">
+                            <v-chip :color="getColor(item.calories)" dark>{{ item.calories }}</v-chip>
+                        </template>
+                    </v-data-table>
+                    <div class="text-center pt-2">
+                        <v-pagination v-model="page" :length="pageCount"></v-pagination>
+                    </div>
+                </div> -->
+
+                <div>
+                    <v-data-table :headers="companyHeaders" :items="companyDatas" :page.sync="companyPageNumber" :items-per-page="itemsPerPage"
+                        hide-default-footer class="elevation-1" :loading="companyLoading" loading-text="로딩중... Please wait">
+                    </v-data-table>
+                    <div class="text-center pt-2">
+                        <v-pagination v-model="companyPageNumber" :length="companyPageCount"></v-pagination>
+                    </div>
+                </div>
+
+            </v-container>
+
+        </v-app>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
 
-<script>
-    new Vue({
-        el: '#root',
-        data: {
-            msg: 'Hello Vue.js!',
-        },
-        methods: {
-            lodashStudy() {
-                let students = [
-                    { name: "홍길동", division: "문과", major: "문학" },
-                    { name: '전우치', division: '이과', major: '기계' },
-                    { name: '임꺽정', division: '이과', major: '화학' },
-                    { name: '일지매', division: '문과', major: '언론' },
-                    { name: '장길산', division: '예체능', major: '체조' },
-                    { name: '연흥부', division: '이과', major: '컴퓨터' },
-                    { name: '연놀부', division: '이과', major: '수학' },
-                    { name: '응고집', division: '문과', major: '경영' },
-                    { name: '이몽룡', division: '문과', major: '정치' },
-                    { name: '연오랑', division: '예체능', major: '사진' }
-                ]
-                console.log('students', students)
+    <script>
 
-                console.log(
-                    _(students)
-                        .filter((i) => i.division === '이과') // '이과' 필터
-                        .take(3) // 앞에서 3개 takeRight 뒤에서 3개
-                        .map((i) => `${i.name}(${i.major})`)
-                        .reduce((sum, i) => sum + ' ' + i)
-                )
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify({
+                theme: { dark: true },
+            }),
+
+            data: () => ({
+                isDark: true,
+                show: true,
+
+                page: 1,
+                pageCount: 7,
+                itemsPerPage: 10,
+
+                companyPageNumber: 1,
+                companyPageCount: 10,
+
+                companyDatas: [],
+                companyLoading: false,
+
+
+                companyHeaders: [
+                    {
+                        text: 'id',
+                        align: 'start',
+                        sortable: false,
+                        value: 'id',
+                    },
+                    { text: 'companyName', value: 'companyName' },
+                    { text: 'tel', value: 'tel' },
+                    { text: 'email', value: 'email' },
+                    { text: 'testBigint', value: 'testBigint' },
+                ],
+
+
+                msg: 'Hello Vue.js!',
+                headers: [
+                    {
+                        text: 'Dessert (100g serving)',
+                        align: 'start',
+                        sortable: false,
+                        value: 'name',
+                    },
+                    { text: 'Calories', value: 'calories' },
+                    { text: 'Fat (g)', value: 'fat' },
+                    { text: 'Carbs (g)', value: 'carbs' },
+                    { text: 'Protein (g)', value: 'protein' },
+                    { text: 'Iron (%)', value: 'iron' },
+                ],
+                desserts: [
+                    {
+                        name: 'Frozen Yogurt',
+                        calories: 159,
+                        fat: 6.0,
+                        carbs: 24,
+                        protein: 4.0,
+                        iron: '1%',
+                    },
+                    {
+                        name: 'Ice cream sandwich',
+                        calories: 237,
+                        fat: 9.0,
+                        carbs: 37,
+                        protein: 4.3,
+                        iron: '1%',
+                    },
+                    {
+                        name: 'Eclair',
+                        calories: 262,
+                        fat: 16.0,
+                        carbs: 23,
+                        protein: 6.0,
+                        iron: '7%',
+                    },
+                    {
+                        name: 'Donut',
+                        calories: 452,
+                        fat: 25.0,
+                        carbs: 51,
+                        protein: 4.9,
+                        iron: '22%',
+                    },
+                    {
+                        name: 'KitKat',
+                        calories: 518,
+                        fat: 26.0,
+                        carbs: 65,
+                        protein: 7,
+                        iron: '6%',
+                    },
+                ],
+            }),
+            computed: {
+            },
+            watch: {
+                companyPageNumber() {
+                    this.getCompanyList(this.companyPageNumber)
+                }
+            },
+            created() {
+                this.getCompanyList()
+            },
+            methods: {
+                getCompanyList(pageNumber) {
+                    this.companyLoading = true
+                    if (!_.isEmpty(pageNumber)) this.companyPageNumber = pageNumber
+                    // let url = `/api/company/company_pagination?limit=10&offset=${this.companyPageNumber}&`
+                    let offset = this.companyPageNumber === 1 ? 0 : this.companyPageNumber * this.itemsPerPage - this.itemsPerPage
+                    console.log('this.companyPageNumber', this.companyPageNumber, 'offset', offset)
+                    let url = `http://localhost:3000/api/company/company_pagination?limit=${this.itemsPerPage}&offset=${offset}&companyName=`
+                    // console.log('url', url)
+                    axios.get(encodeURI(url))
+                        .then(res => {
+                            console.log('res.data', res.data);
+                            this.companyDatas = res.data.results
+                            this.companyPageCount = Math.ceil(res.data.total / this.itemsPerPage)
+                            this.companyLoading = false
+                        })
+                        .catch(e => {
+                            console.error("E", e);
+                        });
+                },
+                testClick() {
+                    console.log('this.companyDatas', this.companyDatas)
+                    console.log('this.companyPageNumber', this.companyPageNumber)
+                    console.log('this.companyPageCount', this.companyPageCount)
+
+                },
+                testClick22() {
+                },
+
+                getColor(calories) {
+                    if (calories > 400) return 'red'
+                    else if (calories > 200) return 'orange'
+                    else return 'green'
+                },
 
             },
-        },
-    })
-</script>
+        })
+    </script>
 </body>
 
 </html>

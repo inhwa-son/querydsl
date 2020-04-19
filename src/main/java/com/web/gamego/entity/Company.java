@@ -12,11 +12,12 @@ import java.util.Date;
 
 
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode()
 @Entity
 @Data
 @Table(name = "company")
-public class Company extends SimplePagingVO {
+public class Company  {
+//extends SimplePagingVO
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +60,9 @@ public class Company extends SimplePagingVO {
         this.testBigint = testBigint;
         this.createdAt = createdAt;
     }
+
+    private Long offset;
+    private Long limit;
 
 
 

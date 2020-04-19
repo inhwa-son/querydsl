@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>querydsl index</title>
+</head>
+
+<style>
+    .done {
+        text-decoration: line-through;
+    }
+</style>
+
+<body>
+    <div id="app" style="height: 100%">
+        <v-app :dark="isDark">
+            <v-content>
+                <v-container>
+                    <v-layout row justify-center class="ma-5">
+                        <v-flex xs12 sm8>
+                            <v-card>
+                                <v-toolbar color="blue darken-4" dark>
+                                    <v-toolbar-side-icon></v-toolbar-side-icon>
+                                    <v-toolbar-title class="headline">Todo App</v-toolbar-title>
+
+                                    <v-spacer></v-spacer>
+
+                                    <v-btn icon>
+                                        <v-icon>search</v-icon>
+                                    </v-btn>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on }">
+                                            <v-btn icon @click="show = !show" v-on="on">
+                                                <v-icon v-model="isDark" @click="isDark = !isDark">
+                                                    {{ show ? 'check_circle' : 'check_circle_outline' }}</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Dark mode</span>
+                                    </v-tooltip>
+                                </v-toolbar>
+
+                                <v-list two-line subheader>
+                                    <v-container>
+                                        <v-subheader class="headline">{{day}}, {{date}}{{ord}} {{year}}</v-subheader>
+                                        <v-spacer></v-spacer>
+
+                                        <p class="text-xs-right"><b>{{todos.length}}</b> Tasks</p>
+
+                                        <v-flex xs12>
+                                            <v-text-field clearable v-model="newTodo" id="newTodo" name="newTodo"
+                                                label="Type your task" @keyup.enter="addTodo">
+                                            </v-text-field>
+                                        </v-flex>
+                                    </v-container>
+                                    <v-subheader class="subheading" v-if="todos.length == 0">You have 0 Tasks, add some
+                                    </v-subheader>
+                                    <v-subheader class="subheading" v-else="todos.length == 1">Your Tasks</v-subheader>
+                                    <div v-for="(todo, i) in todos">
+                                        <v-list-tile avatar>
+                                            <v-list-tile-action>
+                                                <v-checkbox v-model="todo.done"></v-checkbox>
+                                            </v-list-tile-action>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title :class="{
+                  done: todo.done
+                  }" class="title">{{todo.title | capitalize}}
+                                                </v-list-tile-title>
+                                                <v-list-tile-sub-title>Added on: {{date}}{{ord}} {{day}} {{year}}
+                                                </v-list-tile-sub-title>
+                                            </v-list-tile-content>
+                                            <v-btn icon ripple color="red" v-if="todo.done" @click="removeTodo(i)">
+                                                <v-icon class="white--text">close</v-icon>
+                                            </v-btn>
+                                        </v-list-tile>
+                                    </div>
+                                </v-list>
+                            </v-card>
+                            <p class="subheading">This version (1.0) is in vuetify v1.5 new version coming with vuetify
+                                v2.0 with some features</p>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        // const app =
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data() {
+                return {
+                    isDark: true,
+                    show: true,
+                    newTodo: '',
+                    todo: [],
+                    todos: [],
+                    day: this.todoDay(),
+                    date: new Date().getDate(),
+                    ord: this.nth(new Date().getDate()),
+                    year: new Date().getFullYear(),
+                }
+            },
+            methods: {
+                addTodo() {
+                    var value = this.newTodo && this.newTodo.trim();
+                    if (!value) {
+                        return;
+                    }
+                    this.todos.push({
+                        title: this.newTodo,
+                        done: false
+                    });
+                    this.newTodo = '';
+                },
+                removeTodo(index) {
+                    this.todos.splice(index, 1);
+                },
+                todoDay() {
+                    var d = new Date();
+                    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                    return days[d.getDay()];
+                },
+                nth(d) {
+                    if (d > 3 && d < 21) return 'th';
+                    switch (d % 10) {
+                        case 1:
+                            return "st";
+                        case 2:
+                            return "nd";
+                        case 3:
+                            return "rd";
+                        default:
+                            return "th";
+                    }
+                },
+            },
+            filters: {
+                capitalize: function (value) {
+                    if (!value) return ''
+                    value = value.toString()
+                    return value.charAt(0).toUpperCase() + value.slice(1)
+                }
+            }
+        });
+
+        // new Vue({
+        //     el: '#app',
+        //     vuetify: new Vuetify(),
+        // })
+    </script>
+</body>

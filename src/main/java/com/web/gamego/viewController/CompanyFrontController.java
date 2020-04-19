@@ -1,4 +1,4 @@
-package com.web.gamego.controller;
+package com.web.gamego.viewController;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,5 +18,9 @@ public class CompanyFrontController {
         return "companyList";
     }
 
+    @RequestMapping(value = "/per", method = RequestMethod.GET)
+    public String openPerList(Model model, HttpServletRequest request) {
+        return "companyListPerformance";
+    }
 
 }

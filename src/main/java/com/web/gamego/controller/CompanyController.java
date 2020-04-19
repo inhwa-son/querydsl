@@ -5,8 +5,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.web.gamego.entity.Company;
+import com.web.gamego.entity.TableCountEntity;
 import com.web.gamego.entity_view.CompanyView;
-import com.web.gamego.model.PagingVO;
 import com.web.gamego.repo.CompanyRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.web.gamego.entity.QCompany.company;
+import static com.web.gamego.entity.QTableCountEntity.tableCountEntity;
 
 
 @RestController
@@ -40,6 +41,30 @@ public class CompanyController {
     public CompanyController(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
+
+
+    @GetMapping("company_pagination_performance")
+    public List<CompanyView> companyPaginationPerformance(Company vo, HttpServletRequest request) {
+        return queryFactory
+                .select(Projections.bean(CompanyView.class, company.id, company.companyName, company.tel, company.email, company.testBigint))
+                .from(company)
+                .where(eqId(vo.getId()))
+                .limit(vo.getLimit())
+                .orderBy(company.id.desc())
+                .fetch();
+    }
+
+    @GetMapping("company_total_count")
+    public TableCountEntity companyTotalCount(Company vo, HttpServletRequest request) {
+        int id = 1;
+        return queryFactory
+                .selectFrom(tableCountEntity)
+                .where(tableCountEntity.id.eq((long) id))
+                .fetchOne();
+    }
+
+
+
 
     @GetMapping("select_page")
     public List<CompanyView> selectCompanyPage(Company vo, HttpServletRequest request) {
@@ -73,11 +98,12 @@ public class CompanyController {
 
     @GetMapping("company_pagination")
     public QueryResults<CompanyView> companyPagination(Company vo, HttpServletRequest request) {
+        log.info("vo => {}", vo);
         return queryFactory
-                .select(Projections.bean(CompanyView.class, company.id, company.companyName))
+                .select(Projections.bean(CompanyView.class, company.id, company.companyName, company.tel, company.email, company.testBigint))
                 .from(company)
                 .where(eqDeleteAtIsNull()
-                        , eqCompanyNameLike(vo.getCompanyName())
+                        , eqCompanyName(vo.getCompanyName())
                         , eqEmail(vo.getEmail())
                 )
                 .offset(vo.getOffset())
@@ -99,9 +125,8 @@ public class CompanyController {
                 .selectFrom(company)
                 .fetchCount();
 
-        PagingVO pagingVO = new PagingVO(lstCount, vo.getOffset(), vo.getLimit());
-
-        jsonObject.put("page", pagingVO);
+//        PagingVO pagingVO = new PagingVO(lstCount, vo.getOffset(), vo.getLimit());
+//        jsonObject.put("page", pagingVO);
 
 
         return new ResponseEntity<>(jsonObject, HttpStatus.OK);
@@ -141,6 +166,10 @@ public class CompanyController {
 
     private BooleanExpression eqEmail(String email) {
         return StringUtils.isEmpty(email) ? null : company.email.eq(email);
+    }
+
+    private BooleanExpression eqId(Long id) {
+        return StringUtils.isEmpty(id) ? null : company.id.lt(id);
     }
 
 }

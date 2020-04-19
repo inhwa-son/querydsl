@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>querydsl todo list</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <v-app :dark="isDark">
+            <v-container style="max-width: 600px">
+                <div>
+                    <button style="color: aqua;" @click="testClick">버튼</button>
+                    <!-- <button style="color: aqua;" @click="testClick22">버튼222</button> -->
+
+                </div>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn icon @click="show = !show" v-on="on">
+                            <v-icon v-model="isDark" @click="isDark = !isDark">
+                                {{ show ? 'check_circle' : 'check_circle_outline' }}</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Dark mode</span>
+                </v-tooltip>
+
+                <div>
+                    <v-data-table :headers="companyHeaders" :items="companyDatas" :page.sync="companyPageNumber" :items-per-page="itemsPerPage"
+                        hide-default-footer class="elevation-1" :loading="companyLoading" loading-text="로딩중... Please wait">
+                    </v-data-table>
+                    <div class="text-center pt-2">
+                        <v-pagination v-model="companyPageNumber" :length="companyPageCount"></v-pagination>
+                    </div>
+                </div>
+
+            </v-container>
+
+        </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+
+    <script>
+
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify({
+                theme: { dark: true },
+            }),
+
+            data: () => ({
+                isDark: true,
+                show: true,
+
+
+                itemsPerPage: 10,
+
+                companyPageNumber: 1,
+                companyPageCount: 10,
+
+                companyDatas: [],
+                companyLoading: false,
+
+                companyTotalCount: null,
+
+                companyHeaders: [
+                    {
+                        text: 'id',
+                        align: 'start',
+                        sortable: false,
+                        value: 'id',
+                    },
+                    { text: 'companyName', value: 'companyName' },
+                    { text: 'tel', value: 'tel' },
+                    { text: 'email', value: 'email' },
+                    { text: 'testBigint', value: 'testBigint' },
+                ],
+
+
+
+            }),
+            computed: {
+            },
+            watch: {
+                companyPageNumber() {
+                    this.getCompanyList(this.companyPageNumber)
+                }
+            },
+            created() {
+                this.getCompanyList()
+            },
+            methods: {
+                async getCompanyList(pageNumber) {
+                    console.log('pageNumber', pageNumber)
+                    this.companyLoading = true
+                    if (pageNumber != undefined) this.companyPageNumber = pageNumber
+
+                    console.log('this.companyTotalCount', this.companyTotalCount)
+                    let id = ''
+                    if (pageNumber != undefined) id = this.companyTotalCount - (this.companyPageNumber * this.itemsPerPage - this.itemsPerPage - 1)
+                    console.log('id', id)
+                    if (pageNumber === 1) id = ''
+
+                    let url = `http://localhost:3000/api/company/company_pagination_performance?limit=${this.itemsPerPage}&id=${id}`
+                    // let url = `/api/company/company_pagination_performance?limit=${this.itemsPerPage}&id=${id}`
+                    console.log('url', url)
+
+                    let url2 = `http://localhost:3000/api/company/company_total_count`
+
+                    try {
+                        [
+                            this.companyDatas,
+                            this.companyTotalCount
+                        ] = await Promise.all([
+                            axios.get(encodeURI(url))
+                                .then(response => response.data || []),
+                            axios.get(encodeURI(url2))
+                                .then(response => response.data.tableCount || []),
+                        ])
+                        this.companyPageCount = Math.ceil(this.companyTotalCount / this.itemsPerPage)
+                    } catch (e) {
+                        console.error(e)
+                    }
+                    this.companyLoading = false
+                },
+                testClick() {
+                    console.log('this.companyDatas', this.companyDatas)
+                    console.log('this.companyPageNumber', this.companyPageNumber)
+                    console.log('this.companyPageCount', this.companyPageCount)
+                },
+                testClick22() {
+                },
+
+            },
+        })
+    </script>
+</body>
+
+</html>
