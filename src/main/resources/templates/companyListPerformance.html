@@ -60,7 +60,6 @@
                 isDark: true,
                 show: true,
 
-
                 itemsPerPage: 10,
 
                 companyPageNumber: 1,
@@ -99,21 +98,18 @@
             },
             methods: {
                 async getCompanyList(pageNumber) {
-                    console.log('pageNumber', pageNumber)
                     this.companyLoading = true
-                    if (pageNumber != undefined) this.companyPageNumber = pageNumber
 
-                    console.log('this.companyTotalCount', this.companyTotalCount)
                     let id = ''
-                    if (pageNumber != undefined) id = this.companyTotalCount - (this.companyPageNumber * this.itemsPerPage - this.itemsPerPage - 1)
-                    console.log('id', id)
-                    if (pageNumber === 1) id = ''
+                    if (pageNumber != undefined) {
+                        this.companyPageNumber = pageNumber
+                        id = this.companyTotalCount - (this.companyPageNumber * this.itemsPerPage - this.itemsPerPage - 1)
+                    }
 
-                    let url = `http://localhost:3000/api/company/company_pagination_performance?limit=${this.itemsPerPage}&id=${id}`
+                    const url = `http://localhost:3000/api/company/company_pagination_performance?limit=${this.itemsPerPage}&id=${id}`
                     // let url = `/api/company/company_pagination_performance?limit=${this.itemsPerPage}&id=${id}`
-                    console.log('url', url)
 
-                    let url2 = `http://localhost:3000/api/company/company_total_count`
+                    const url2 = `http://localhost:3000/api/company/company_total_count`
 
                     try {
                         [
