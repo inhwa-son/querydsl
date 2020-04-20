@@ -169,7 +169,7 @@ public class CompanyController {
     }
 
     private BooleanExpression eqId(Long id) {
-        return StringUtils.isEmpty(id) ? null : company.id.lt(id);
+        return StringUtils.isEmpty(id) ? null : company.id.loe(id);
     }
 
 }

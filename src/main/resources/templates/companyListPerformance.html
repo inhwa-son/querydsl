@@ -101,9 +101,9 @@
                     this.companyLoading = true
 
                     let id = ''
-                    if (pageNumber != undefined) {
+                    if (pageNumber !== undefined) {
                         this.companyPageNumber = pageNumber
-                        id = this.companyTotalCount - (this.companyPageNumber * this.itemsPerPage - this.itemsPerPage - 1)
+                        id = this.companyTotalCount - (this.companyPageNumber * this.itemsPerPage - this.itemsPerPage)
                     }
 
                     const url = `http://localhost:3000/api/company/company_pagination_performance?limit=${this.itemsPerPage}&id=${id}`
