@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>vuetify test</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <v-app :dark="isDark">
+            <v-container style="max-width: 600px">
+                <template>
+                    <v-card class="overflow-hidden">
+                        <v-app-bar :collapse="!collapseOnScroll" :collapse-on-scroll="collapseOnScroll" absolute color="deep-purple accent-4" dark
+                            scroll-target="#scrolling-techniques-6">
+                            <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+                            <v-toolbar-title>Collapsing Bar</v-toolbar-title>
+
+                            <v-spacer></v-spacer>
+
+                            <v-checkbox v-model="collapseOnScroll" color="white" hide-details></v-checkbox>
+                        </v-app-bar>
+                        <v-sheet id="scrolling-techniques-6" class="overflow-y-auto" max-height="600">
+                            <v-container style="height: 1000px;"></v-container>
+                        </v-sheet>
+                    </v-card>
+                </template>
+
+
+            </v-container>
+
+        </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+
+    <script>
+
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify({
+                theme: { dark: true },
+            }),
+
+            data: () => ({
+                isDark: true,
+                collapseOnScroll: true,
+
+
+            }),
+            computed: {
+            },
+            watch: {
+
+            },
+            created() {
+            },
+            methods: {
+
+
+            },
+        })
+    </script>
+</body>
+
+</html>
